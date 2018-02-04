@@ -1,4 +1,10 @@
 const Discord = require("discord.js");
 const bot = new Discord.Client();
+const config = require("./config.json")
 
-bot.login("NDA5NjMyMzY5MDUwNjQ4NTc3.DVhbbw.ZLLslcK1kmH7T_ijC_6Y-FFN_Ek");
+bot.on("message", (message) => {
+	if (message.content == "ping")
+		message.reply("pong");
+})
+
+bot.login(config.token);
