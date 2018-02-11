@@ -1,3 +1,12 @@
 {
-	"token": "NDA5NjMyMzY5MDUwNjQ4NTc3.DVhbbw.ZLLslcK1kmH7T_ijC_6Y-FFN_Ek"
+	"token": "NDA5NjMyMzY5MDUwNjQ4NTc3.DVhbbw.ZLLslcK1kmH7T_ijC_6Y-FFN_Ek",
+	"prefix": "!",
+	"server": "330718308057743370",
+	"inboxurl": "http://tempus.microbarbox.com/home/inbox.php",
+	"sql": {
+		"host": "localhost",
+		"user": "charlie",
+		"password": "sqlpassword",
+		"database": "tempus"
+	}
 }
