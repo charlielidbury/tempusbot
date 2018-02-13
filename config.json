@@ -1,7 +1,8 @@
 {
-	"token": "NDA5NjMyMzY5MDUwNjQ4NTc3.DVhbbw.ZLLslcK1kmH7T_ijC_6Y-FFN_Ek",
+	"token": "NDEyOTM0MjYzMDc2NDIxNjMy.DWReiw.18NhTeVdG-9w_eZyYL0sWRbM9Fs",
 	"prefix": "!",
 	"server": "330718308057743370",
+	"session_category": "tempus",
 	"inboxurl": "http://tempus.microbarbox.com/home/inbox.php",
 	"sql": {
 		"host": "localhost",

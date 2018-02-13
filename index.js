@@ -3,6 +3,22 @@ const Discord = require("discord.js");
 const client = new Discord.Client();
 const config = require("./config.json") // config file
 
+function run(command, client, message, args){
+	try {
+		// finds command file and runs the run function in it
+		var commandFile = require(`./commands/${command}`);
+		commandFile.run(client, message, args);
+		delete require.cache[require.resolve(`./commands/${command}`)];
+
+	} catch (err) {
+		// tells the user the command doesn't exist
+		if (err.code == "MODULE_NOT_FOUND")
+			message.reply(`Unrecognised command: '${command}', use '!help' for list of commands.`);
+		else
+			console.log(err);
+	}
+}
+
 function log(command, args) {
 	console.log(`Command run: ${command}, args: ` + JSON.stringify(args));
 }
@@ -22,19 +38,7 @@ client.on("message", (message) => {
 	// ["test", 1, 2]
 
 	// actual running
-	try {
-		// finds command file and runs the run function in it
-		var commandFile = require(`./commands/${command}`);
-		commandFile.run(client, message, args);
-		delete require.cache[require.resolve(`./commands/${command}`)];
-	} catch (err) {
-		// tells the user the command doesn't exist
-		if (err.code == "MODULE_NOT_FOUND"){
-			message.reply(`Unrecognised command: '${command}', use '!help' for list of commands.`);
-			console.error(err);
-		} else
-			throw err;
-	}
+	run(command, client, message, args);
 
 	// logging
 	log(command, args);
