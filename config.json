@@ -3,7 +3,7 @@
 	"prefix": "!",
 	"server": "330718308057743370",
 	"session_category": "tempus",
-	"inboxurl": "http://tempus.microbarbox.com/home/inbox.php",
+	"inboxurl": "http://tempus.microbarbox.com/home/my_sessions.php",
 	"sql": {
 		"host": "localhost",
 		"user": "charlie",
