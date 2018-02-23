@@ -44,5 +44,8 @@ exports.run = (client, message, args) => {
 			// sets invite to accepted
 			con.query(`UPDATE invite SET received = NOW(), accepted = ${args[0] == 'accept'} WHERE employee = "${nickname}" AND received IS NULL`);
 		});
+
+		message.reply(`You replied to the reply with: ${args[0]}`);
+
 	}
 }
