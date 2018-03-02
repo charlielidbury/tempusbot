@@ -1,47 +1,63 @@
 // importing modules
 const Discord = require("discord.js");
-const client = new Discord.Client();
+const http = require("http");
+
+// importing files
 const config = require("./config.json") // config file
+const tempus = require("./tempus.js"); // actually does the things
+const helpers = require("./helpers.js"); // bunch of helper functions
 
-function run(command, client, message, args){
-	try {
-		// finds command file and runs the run function in it
-		var commandFile = require(`./commands/${command}`);
-		commandFile.run(client, message, args);
-		delete require.cache[require.resolve(`./commands/${command}`)];
+// Connections
+const client = new Discord.Client();
 
-	} catch (err) {
-		// tells the user the command doesn't exist
-		if (err.code == "MODULE_NOT_FOUND")
-			message.reply(`Unrecognised command: '${command}', use '!help' for list of commands.`);
-		else
-			console.log(err);
+const server = http.createServer( (request, response) => {
+
+	console.log("I HAVE BEEN POKED");
+
+	if (request.method == "POST") {
+		// if POST method used
+		request.on("data", data => {
+			const commands = JSON.parse(data.toString());
+
+			commands.forEach(command => {
+				// find function
+				if (tempus.hasOwnProperty(command[0])) {
+					// stores the function
+					const func = tempus[command[0]];
+					// replaces the function name with the client
+					command[0] = client;
+					// applies args and executes
+					try 		{ func.apply(null, command); }
+					catch (err) { console.error(`Error while executing ${command[0]}: ${err}`); }
+				} else
+					console.error(`Couldn't find function: ${command[0]}`);
+			});
+		});
 	}
-}
+});
 
-function log(command, args) {
-	console.log(`Command run: ${command}, args: ` + JSON.stringify(args));
-}
+var port = 3000;
+var host = "127.0.0.1";
+server.listen(port, host);
+console.log(`Listening at http://${host}:${port}`);
+
+// starting actions
+client.on("ready", evnt => {
+	console.log("Bot started");
+});
 
 // load commands
-client.on("message", (message) => {
+client.on("message", message => {
 	if (message.content[0] !== config.prefix) return; // ignores non-commands
 
-	// "!roll test 1 2"
-	var no_prefix = message.content.slice(1);
-	// "roll test 1 2"
-	var as_array = no_prefix.split(" ");
-	// ["roll", "test", "1", "2"]
-	var args = as_array.map(element => { try {return JSON.parse(element);} catch (err) {return element;} });
-	// ["roll", "test", 1, 2]
-	var command = args.shift();
-	// ["test", 1, 2]
+	// "!roll test 1 2" => { "command": "roll", "args": ["test", 1, 2] }
+	const details = helpers.proccessCommand(message);
 
 	// actual running
-	run(command, client, message, args);
+	helpers.run(details.command, client, message, details.args);
 
 	// logging
-	log(command, args);
+	helpers.log(details.command, details.args);
 });
 
 // login

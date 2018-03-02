@@ -5,44 +5,30 @@ exports.run = (client, message, args) => {
 		// imports
 		const config = require("../config.json");
 		const mysql = require("mysql");
-		var con = mysql.createConnection(config.sql);
+		const tempus = require("../tempus.js");
 
 		// finds the guildmember who sent the message
-		var server = client.guilds.get(config.server);
-		var nickname = server.members.get(message.author.id).nickname;
+		const con = mysql.createConnection(config.sql);
+		const server = client.guilds.get(config.server);
+		const name = server.members.get(message.author.id).displayName;
 
 		con.connect(err => {
 			if (err) throw err;
 
-			// finds the session(s)
-			if (args[0] == 'accept')
-				con.query(`SELECT DATE_FORMAT(session, "%Y-%m-%d") as date FROM invite WHERE employee = "${nickname}" AND received IS NULL`, (err, results, fields) => {
+
+			// adds the user to the channel if they accepted
+			if (args[0] == 'accept') {
+				const add_query = `SELECT DATE_FORMAT(session, "%Y-%m-%d") AS session FROM invite WHERE employee = "${name}" AND received IS NULL`;
+				con.query(add_query, (err, result) => {
 					if (err) throw err;
-					results.forEach(row => {
-						if (!server.channels.exists("name", row.date))
-						{ // create new channel if it doesn't exist
-							console.log("Creating channel...");
-							server.createChannel(row.date)
-								.then(channel => {
-									console.log("Channel Created");
-									// stops everyone from being able to see it
-									channel.overwritePermissions(server.defaultRole, { "READ_MESSAGES": false });
-									// allows you to see it
-									channel.overwritePermissions(message.author, { "READ_MESSAGES": true });
-									// moves the channel into the TEMPUS category
-									channel.setParent(server.channels.find(ch => ch.name == config.session_category));
-								})
-								.catch(console.error);
-						} else {
-							console.log("Channel already exists");
-							// allows you to see it
-							server.channels.find("name", row.date).overwritePermissions(message.author, { "READ_MESSAGES": true });
-						}
-					});
+
+					result.forEach(row => tempus.addUser(client, row.session, name));
 				});
+			}
 
 			// sets invite to accepted
-			con.query(`UPDATE invite SET received = NOW(), accepted = ${args[0] == 'accept'} WHERE employee = "${nickname}" AND received IS NULL`);
+			const update_query = `UPDATE invite SET received = NOW(), accepted = ${args[0] == 'accept'} WHERE employee = "${name}" AND received IS NULL`
+			con.query(update_query);
 		});
 
 		message.reply(`You replied to the reply with: ${args[0]}`);

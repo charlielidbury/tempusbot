@@ -1,17 +1,4 @@
-// importing modules
-const Discord = require("discord.js");
-const client = new Discord.Client();
-const config = require("./config.json") // config file
+const tempus = require("./tempus.js"); // actually does the things
 
-// connect to the database
-const mysql = require("mysql");
-var con = mysql.createConnection(config.sql);
-
-con.connect((err) => {
-	if (err) throw err;
-
-	// get list of employees that have invites unsent
-	con.query("SELECT `employee`, `session` FROM `invite` WHERE `sent` IS NULL", (err, result, fields) => {
-		console.log(client.guilds.get(config.server));
-	});
-});
+console.log(tempus.hasOwnProperty("createChannel"));
+console.log(tempus.hasOwnProperty("tsetesf"));
