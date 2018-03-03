@@ -26,7 +26,7 @@ exports.sendAllInvites = (client) => {
 	});
 }
 
-exports.sendInvite = (client, date, user) => {
+exports.sendInvite = (client, date, user, invite_message) => {
 	/* Invites [user] to session on [date]
 
 	client <= Discord.js client object
@@ -39,9 +39,6 @@ exports.sendInvite = (client, date, user) => {
 	const target_user = mbx_server.members.find("displayName", user);
 
 	// send the message
-	const invite_message = `You have been invited into session: ${date}.`
-						 + `Reply with '!invite accept' to accept the invite or '!invite decline' to decline.`
-						 + `Go to ${config.inboxurl} to see all invites.`;
 	console.log(`Sent invite for ${date} to ${user}`);
 	target_user.send(invite_message);
 
