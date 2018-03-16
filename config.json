@@ -1,13 +1,13 @@
 {
 	"token": "NDEyOTM0MjYzMDc2NDIxNjMy.DWReiw.18NhTeVdG-9w_eZyYL0sWRbM9Fs",
 	"prefix": "!",
-	"server": "368082354381651969",
-	"channel": "412947596512854018",
+	"server": "330718308057743370",
+	"channel": "417806140496412683",
 	"inboxurl": "http://tempus.microbarbox.com/home/my_sessions.php",
 	"sql": {
 		"host": "localhost",
-		"user": "charlie",
-		"password": "sqlpassword",
+		"user": "bitnami",
+		"password": "mysqlpassword",
 		"database": "tempus"
 	}
 }
